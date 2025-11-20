@@ -1,8 +1,18 @@
+import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Hero from "./components/Hero";
 import { NewArrivals, ClubHistory, NewsletterCTA } from "./components/Sections";
 import ProductModal from "./components/ProductModal";
 import { CartProvider, useCart } from "./components/CartContext";
 import { ShoppingCart, Menu } from "lucide-react";
+import Shop from "./components/Shop";
+import ProductPage from "./components/ProductPage";
+import About from "./components/pages/About";
+import Contact from "./components/pages/Contact";
+import FAQ from "./components/pages/FAQ";
+import Shipping from "./components/pages/Shipping";
+import SizeGuide from "./components/pages/SizeGuide";
+import CartView from "./components/CartView";
+import Checkout from "./components/Checkout";
 
 function Navbar() {
   const { cart } = useCart();
@@ -16,19 +26,19 @@ function Navbar() {
             <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
             <span className="w-3 h-3 rounded-full bg-red-500"></span>
           </div>
-          <span className="ml-2 font-black text-white tracking-wide">MC Alger Store</span>
+          <Link to="/" className="ml-2 font-black text-white tracking-wide">MC Alger Store</Link>
         </div>
         <nav className="hidden md:flex items-center gap-6 text-white/80">
-          <a href="#" className="hover:text-white">Home</a>
-          <a href="#shop" className="hover:text-white">Shop</a>
-          <a href="#about" className="hover:text-white">About</a>
-          <a href="#contact" className="hover:text-white">Contact</a>
+          <Link to="/" className="hover:text-white">Home</Link>
+          <Link to="/shop" className="hover:text-white">Shop</Link>
+          <Link to="/about" className="hover:text-white">About</Link>
+          <Link to="/contact" className="hover:text-white">Contact</Link>
         </nav>
-        <div className="flex items-center gap-3">
-          <div className="relative text-white">
+        <div className="flex items-center gap-3 text-white">
+          <Link to="/cart" className="relative">
             <ShoppingCart />
             {count > 0 && <span className="absolute -top-2 -right-2 text-xs bg-red-600 text-white rounded-full px-1.5">{count}</span>}
-          </div>
+          </Link>
         </div>
       </div>
     </header>
@@ -46,9 +56,9 @@ function Footer() {
         <div>
           <div className="font-semibold text-white">Support</div>
           <ul className="mt-2 space-y-1">
-            <li>Shipping & Returns</li>
-            <li>FAQ</li>
-            <li>Size Guide</li>
+            <li><Link to="/shipping-returns" className="hover:text-white">Shipping & Returns</Link></li>
+            <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
+            <li><Link to="/size-guide" className="hover:text-white">Size Guide</Link></li>
           </ul>
         </div>
         <div>
@@ -62,6 +72,7 @@ function Footer() {
 }
 
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <>
       <Hero />
@@ -77,7 +88,18 @@ function Shell() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_10%_-10%,rgba(16,185,129,0.25),transparent_40%),_radial-gradient(circle_at_110%_10%,rgba(239,68,68,0.25),transparent_40%)] from-slate-950 to-slate-950">
       <Navbar />
-      <HomePage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/shipping-returns" element={<Shipping />} />
+        <Route path="/size-guide" element={<SizeGuide />} />
+        <Route path="/cart" element={<CartView />} />
+        <Route path="/checkout" element={<Checkout />} />
+      </Routes>
       <Footer />
     </div>
   );
@@ -86,7 +108,9 @@ function Shell() {
 export default function App() {
   return (
     <CartProvider>
-      <Shell />
+      <BrowserRouter>
+        <Shell />
+      </BrowserRouter>
     </CartProvider>
   );
 }
